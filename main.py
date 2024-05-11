@@ -1,34 +1,67 @@
-import os
-import cv2
-
-list_of_names = []
+# imports
+from PIL import Image, ImageDraw, ImageFont
 
 
-def delete_old_data():
-    for i in os.listdir("generated-certificates/"):
-        os.remove("generated-certificates/{}".format(i))
+def coupons(names: list, certificate: str, font_path: str):
+    for name in names:
+        # adjust the position according to
+        # your sample
+        text_y_position = 900
+
+        # opens the image
+        img = Image.open(certificate, mode='r')
+
+        # gets the image width
+        image_width = img.width
+
+        # gets the image height
+        image_height = img.height
+
+        # creates a drawing canvas overlay
+        # on top of the image
+        draw = ImageDraw.Draw(img)
+
+        # gets the font object from the
+        # font file (TTF)
+        font = ImageFont.truetype(
+            font_path,
+            200  # change this according to your needs
+        )
+
+        # fetches the text width for
+        # calculations later on
+        text_width, _ = draw.textsize(name, font=font)
+
+        draw.text(
+            (
+                # this calculation is done
+                # to centre the image
+                (image_width - text_width) / 2,
+                text_y_position
+            ),
+            name,
+            font=font,
+            fill=(134, 91, 52)
+        )
+
+        # saves the image in png format
+        img.save("{}.png".format(name))
+
+    # Driver Code
 
 
-def cleanup_data():
-    with open('name-data.txt') as f:
-        for line in f:
-            list_of_names.append(line.strip())
+if __name__ == "__main__":
+    # some example of names
+    NAMES = ['Frank Muller',
+             'Mathew Frankfurt',
+             'Cristopher Greman',
+             'Natelie Wemberg',
+             'John Ken']
 
+    # path to font
+    FONT = "/home/khasanjon/projects/learn/certificate-python/font-1.ttf"
 
-def generate_certificates():
-    for index, name in enumerate(list_of_names):
-        certificate_template_image = cv2.imread("certificate-template.jpg")
-        cv2.putText(certificate_template_image, name.strip(), (815, 1500), cv2.FONT_HERSHEY_SIMPLEX, 5, (0, 0, 250), 5,
-                    cv2.LINE_AA)
-        cv2.imwrite("generated-certificates/{}.jpg".format(name.strip()), certificate_template_image)
-        print("Processing {} / {}".format(index + 1, len(list_of_names)))
+    # path to sample certificate
+    CERTIFICATE = "/home/khasanjon/projects/learn/certificate-python/template.png"
 
-
-def main():
-    delete_old_data()
-    cleanup_data()
-    generate_certificates()
-
-
-if __name__ == '__main__':
-    main()
+    coupons(NAMES, CERTIFICATE, FONT)
