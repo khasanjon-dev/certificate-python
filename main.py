@@ -1,62 +1,30 @@
-# imports
+import os
+
 from PIL import Image, ImageDraw, ImageFont
 
 
 def coupons(names: list, certificate: str, font_path: str):
+    if not os.path.exists("certificates"):
+        os.makedirs("certificates")
     for name in names:
-        # adjust the position according to
-        # your sample
-        text_y_position = 900
-
-        # opens the image
         img = Image.open(certificate, mode='r')
-
-        # gets the image width
         image_width = img.width
-
-        # gets the image height
         image_height = img.height
-
-        # creates a drawing canvas overlay
-        # on top of the image
         draw = ImageDraw.Draw(img)
+        font_size = 140
+        font = ImageFont.truetype(font_path, font_size)
 
-        # gets the font object from the
-        # font file (TTF)
-        font = ImageFont.truetype(
-            font_path,
-            200  # change this according to your needs
-        )
+        text_width, text_height = draw.textsize(name, font=font)
+        text_x_position = (image_width - text_width) / 2
+        text_y_position = (image_height - text_height) / 2 - 90
+        draw.text((text_x_position, text_y_position), name, font=font, fill=(134, 91, 52))
 
-        # fetches the text width for
-        # calculations later on
-        text_width, _ = draw.textsize(name, font=font)
-
-        draw.text(
-            (
-                # this calculation is done
-                # to centre the image
-                (image_width - text_width) / 2,
-                text_y_position
-            ),
-            name,
-            font=font,
-            fill=(134, 91, 52)
-        )
-
-        # saves the image in png format
-        img.save("{}.png".format(name))
-
-    # Driver Code
+        img.save(os.path.join("certificates", "{}.png".format(name)))
 
 
 if __name__ == "__main__":
     # some example of names
-    NAMES = ['Frank Muller',
-             'Mathew Frankfurt',
-             'Cristopher Greman',
-             'Natelie Wemberg',
-             'John Ken']
+    NAMES = ['Hasanjon Mamadaliyev']
 
     # path to font
     FONT = "/home/khasanjon/projects/learn/certificate-python/font-1.ttf"
