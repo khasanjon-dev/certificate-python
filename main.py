@@ -27,14 +27,17 @@ def coupons(names: list, certificate: str, channel_name: str, font_path: str):
         )
 
         # user name
-        font_size_name = 120
-        font_name = ImageFont.truetype(font_path, font_size_name)
-        text_width, text_height = draw.textsize(name, font=font_name)
-        text_x_position = (image_width - text_width) / 2
-        text_y_position = (image_height - text_height) / 2 - 100
+        name_size = 120
+        font_name = ImageFont.truetype(font_path, name_size)
+        text_bbox = draw.textbbox((0, 0), name, font=font_name)
+        text_w = text_bbox[2] - text_bbox[0]
+        text_h = text_bbox[3] - text_bbox[1]
+        text_x_position = (image_width - text_w) / 2
+        text_y_position = (image_height - text_h) / 2 - 100
         draw.text((text_x_position, text_y_position), name, font=font_name, fill=(134, 91, 52))
 
         # channel name
+        # TODO textbbox usage ... # noqa
         text_size = 35
         font_text = ImageFont.truetype(font_channel_path, text_size)
         total_text_height = sum(draw.textsize(line, font=font_text)[1] for line in text)
@@ -44,11 +47,13 @@ def coupons(names: list, certificate: str, channel_name: str, font_path: str):
             x = (image_width - text_w) / 2
             draw.text((x, y), line, font=font_text, fill=(134, 91, 52))
             y += text_h - 10
+        # author_size = 40
+        # author_font_path = 'fonts/text-font-2.otf'
+        # text_w, text_h = draw.textsize(name, )
         img.save(os.path.join("certificates", "{}.png".format(name)))
 
 
-if __name__ == "__main__":
-    NAMES = ['Hasanjon Mamadaliyev']
-    FONT = "/home/khasanjon/projects/learn/certificate-python/fonts/font5.otf"
-    CERTIFICATE = "/home/khasanjon/projects/learn/certificate-python/templates/template2.png"
-    coupons(NAMES, CERTIFICATE, 'devmasters', FONT)
+FONT = "fonts/font5.otf"
+CERTIFICATE = "templates/template2.png"
+NAMES = ['Hasanjon Mamadaliyev']
+coupons(NAMES, CERTIFICATE, 'devmasters', FONT)
