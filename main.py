@@ -16,12 +16,12 @@ def coupons(names: list, certificate: str, channel_name: str, font_path: str):
         count_test = 10
         percentage = 80
         author_name = 'Malika Rustamova'
-        channel_name = 1
+        channel_name = 'matematika'
         text = (
-            f"{channel_name} - kodli testdan {count_test} ta savoldan {count_test} "
+            f"Siz {channel_name.upper()} - tomonidan o'tqazilgan testda {count_test} ta savoldan {count_test} "
             f"tasiga to'g'ri javob berib,"
             f" {percentage}% natijani qayt etdingiz.\n",
-            f"Shu sababli siz muallif {author_name} "
+            f"Shu sababli muallif {author_name} "
             f"tomonidan ushbu sertifikat bilan taqdirlandingiz.\n",
             f"Kelgusi testlarda omad tilaymiz!"
         )
