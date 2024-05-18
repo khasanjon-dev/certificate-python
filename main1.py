@@ -37,19 +37,19 @@ def coupons(names: list, certificate: str, channel_name: str, font_path: str):
         draw.text((text_x_position, text_y_position), name, font=font_name, fill=(134, 91, 52))
 
         # channel name
+        # TODO textbbox usage ... # noqa
         text_size = 35
         font_text = ImageFont.truetype(font_channel_path, text_size)
-        total_text_height = sum(
-            draw.textbbox((0, 0), line, font=font_text)[3] - draw.textbbox((0, 0), line, font=font_text)[1] for line in
-            text)
-        y = (image_height - total_text_height) / 2 + 80
+        total_text_height = sum(draw.textsize(line, font=font_text)[1] for line in text)
+        y = (image_height - total_text_height) / 2 + 150
         for line in text:
-            bbox = draw.textbbox((0, 0), line, font=font_text)
-            text_w = bbox[2] - bbox[0]
-            text_h = bbox[3] - bbox[1]
+            text_w, text_h = draw.textsize(line, font=font_text)
             x = (image_width - text_w) / 2
             draw.text((x, y), line, font=font_text, fill=(134, 91, 52))
-            y += text_h + 20
+            y += text_h - 10
+        # author_size = 40
+        # author_font_path = 'fonts/text-font-2.otf'
+        # text_w, text_h = draw.textsize(name, )
         img.save(os.path.join("certificates", "{}.png".format(name)))
 
 
