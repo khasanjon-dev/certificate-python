@@ -39,7 +39,17 @@ def wrap_text_to_width(draw, text, font, max_width):
     return lines
 
 
-def generate_certificate(names: list, certificate: str, channel_name: str, font_path: str):
+def generate_certificate(data: dict) -> None:
+    names = data['names']
+    certificate = data['certificate']
+    channel_name = data['channel_name']
+    author_name = data['author_name']
+    bot_username = data['bot_username']
+    rank_number = data['rank_number']
+    length_test = data['length_test']
+    solved_test_length = data['solved_test_length']
+    percentage_test = round(solved_test_length / length_test * 100, 2)
+
     if not os.path.exists("certificates"):
         os.makedirs("certificates")
 
@@ -49,15 +59,10 @@ def generate_certificate(names: list, certificate: str, channel_name: str, font_
         image_height = img.height
         draw = ImageDraw.Draw(img)
 
-        count_test = 10
-        percentage = 80
-        author_name = 'Malika Rustamova'
-        channel_name = 'devmasters'
-        # TODO ... fix values
         text = (
-            f"Siz {channel_name.upper()} - jamoasi tomonidan o'tqazilgan testda {count_test} ta savoldan {count_test} "
+            f"Siz {channel_name.upper()} - jamoasi tomonidan o'tqazilgan testda {length_test} ta savoldan {solved_test_length} "
             f"tasiga to'g'ri javob berib,"
-            f" {percentage}% natijani qayt etdingiz.",
+            f" {percentage_test}% natijani qayt etdingiz.",
             f"Shu sababli siz muallif {author_name} "
             f"tomonidan ushbu sertifikat bilan taqdirlandingiz.",
             f"Kelgusi testlarda omad tilaymiz!"
@@ -65,7 +70,8 @@ def generate_certificate(names: list, certificate: str, channel_name: str, font_
 
         # writing name
         name_size = 120
-        name_font = ImageFont.truetype(font_path, name_size)
+        name_font_path = 'fonts/font5.otf'
+        name_font = ImageFont.truetype(name_font_path, name_size)
         name_font = fit_text_to_width(draw, name, name_font, image_width - 40)
         name_bbox = draw.textbbox((0, 0), name, font=name_font)
         text_w = name_bbox[2] - name_bbox[0]
@@ -97,7 +103,6 @@ def generate_certificate(names: list, certificate: str, channel_name: str, font_
         # writing author name
         author_name_size = 40
         author_font_path = 'fonts/text-font-2.otf'
-        author_name = 'Malika Rustamova'
         font_author = ImageFont.truetype(author_font_path, author_name_size)
         author_bbox = draw.textbbox((0, 0), author_name, font=font_author)
         text_w = author_bbox[2] - author_bbox[0]
@@ -109,19 +114,17 @@ def generate_certificate(names: list, certificate: str, channel_name: str, font_
         # writing bot name
         bot_size = 40
         bot_font_path = 'fonts/text-font-2.otf'
-        bot_text = '#exam_e_bot'
         bot_font = ImageFont.truetype(bot_font_path, bot_size)
-        bot_bbox = draw.textbbox((0, 0), bot_text, font=bot_font)
+        bot_bbox = draw.textbbox((0, 0), bot_username, font=bot_font)
         text_w = bot_bbox[2] - bot_bbox[0]
         text_h = bot_bbox[3] - bot_bbox[1]
         text_x_position = (image_width - text_w) / 2 + 395
         text_y_position = (image_height - text_h) / 2 + 365
-        draw.text((text_x_position, text_y_position), bot_text, font=bot_font, fill=(134, 91, 52))
+        draw.text((text_x_position, text_y_position), bot_username, font=bot_font, fill=(134, 91, 52))
 
         # writing rank
         rank_size = 35
         rank_font_path = 'fonts/text-font-2.otf'
-        rank_number = 1000
         rank_text = 'Reyting: TOP #' + str(rank_number)
         rank_font = ImageFont.truetype(rank_font_path, rank_size)
         rank_bbox = draw.textbbox((0, 0), rank_text, font=rank_font)
@@ -137,4 +140,14 @@ def generate_certificate(names: list, certificate: str, channel_name: str, font_
 FONT = "fonts/font5.otf"
 CERTIFICATE = "templates/template.png"
 NAMES = ['Hasanjon Mamadaliyev']
-coupons(NAMES, CERTIFICATE, 'devmasters', FONT)
+data = {
+    'names': NAMES,
+    'certificate': CERTIFICATE,
+    'channel_name': 'matematika',
+    'author_name': 'Malika Rustamova',
+    'bot_username': 'exam_e_bot',
+    'rank_number': 1400,
+    'length_test': 90,
+    'solved_test_length': 75,
+}
+generate_certificate(data)
